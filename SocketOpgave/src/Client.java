@@ -1,25 +1,38 @@
 import java.io.*;
 import java.net.*;
+import java.util.Scanner;
 
 class Client
 {
     public static void main(String args[]) throws Exception
     {
-        BufferedReader inFromUser =
-                new BufferedReader(new InputStreamReader(System.in));
+        String conIP;
+        int conPort;
+        String userName;
+        Scanner scan = new Scanner(System.in);
+        String sentence;
         DatagramSocket clientSocket = new DatagramSocket();
         byte[] sendData = new byte[1024];
         byte[] receiveData = new byte[1024];
-        String conIP = inFromUser.readLine();
+        System.out.println("Please enter the chatroom IP: 169.254.68.25");
+        conIP = scan.nextLine();
         InetAddress IPAddress = InetAddress.getByName(conIP);
-        String sentence = inFromUser.readLine();
+        System.out.println("Please enter port:");
+        conPort = scan.nextInt();
+        System.out.println("Please enter username:");
+        scan.nextLine();
+        userName = scan.nextLine();
+        sendData = userName.getBytes();
+        DatagramPacket sendPacket = new DatagramPacket(sendData,sendData.length, IPAddress, conPort);
+        clientSocket.send(sendPacket);
+        sentence = scan.nextLine();
+        if (sentence.equalsIgnoreCase("quit")) {
+            clientSocket.close();
+        }
         sendData = sentence.getBytes();
-        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 5555);
+        sendPacket = new DatagramPacket(sendData,sendData.length, IPAddress, conPort);
         clientSocket.send(sendPacket);
         DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
         clientSocket.receive(receivePacket);
-        String modifiedSentence = new String(receivePacket.getData());
-        System.out.println("FROM SERVER:" + modifiedSentence);
-        clientSocket.close();
     }
 }

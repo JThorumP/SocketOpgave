@@ -1,2 +1,2 @@
-public class Server { //Server
+public class Server { //Server1
 }

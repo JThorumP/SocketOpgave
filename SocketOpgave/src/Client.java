@@ -1,2 +1,2 @@
-public class Client { //Client
+public class Client { //Client2
 }
